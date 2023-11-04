@@ -8,3 +8,6 @@ To build the project, press Ctrl+Alt+I (or press "F1" and select "Arduino: Verif
 ## Simulation
 
 To simulate this project, install [Wokwi for VS Code](https://marketplace.visualstudio.com/items?itemName=wokwi.wokwi-vscode). Open the project directory in Visual Studio Code, press **F1** and select "Wokwi: Start Simulator".
+
+## Demo
+![Circuit Demo by Wokwi](assets/images/demo.png)
