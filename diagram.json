@@ -3,113 +3,48 @@
     "author": "Michael Ahli",
     "editor": "wokwi",
     "parts": [
-        {
-            "type": "wokwi-arduino-uno",
-            "id": "uno",
-            "top": 0,
-            "left": 0,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-potentiometer",
-            "id": "pot1",
-            "top": 229.1,
-            "left": 19,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-pushbutton",
-            "id": "btn1",
-            "top": 265.4,
-            "left": 211.2,
-            "attrs": {
-                "color": "green"
-            }
-        },
-        {
-            "type": "wokwi-led",
-            "id": "led1",
-            "top": -70.8,
-            "left": 42.2,
-            "attrs": {
-                "color": "red"
-            }
-        },
-        {
-            "type": "wokwi-resistor",
-            "id": "r1",
-            "top": -34.45,
-            "left": 86.4,
-            "attrs": {
-                "value": "1000"
-            }
-        }
+      { "type": "wokwi-breadboard", "id": "bb1", "top": -31.8, "left": -35.6, "attrs": {} },
+      { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 249.6, "left": -23.96, "attrs": {} },
+      {
+        "type": "board-ssd1306",
+        "id": "oled1",
+        "top": 262.34,
+        "left": 288.23,
+        "attrs": { "i2cAddress": "0x3c" }
+      },
+      {
+        "type": "wokwi-resistor",
+        "id": "r1",
+        "top": 72,
+        "left": 124.25,
+        "rotate": 90,
+        "attrs": { "value": "130" }
+      },
+      {
+        "type": "wokwi-led",
+        "id": "led1",
+        "top": -13.2,
+        "left": 128.6,
+        "attrs": { "color": "red" }
+      }
     ],
     "connections": [
-        [
-            "uno:5V",
-            "pot1:VCC",
-            "red",
-            [
-                "v0"
-            ]
-        ],
-        [
-            "pot1:GND",
-            "uno:GND.2",
-            "black",
-            [
-                "v0"
-            ]
-        ],
-        [
-            "pot1:SIG",
-            "uno:A0",
-            "green",
-            [
-                "v0"
-            ]
-        ],
-        [
-            "btn1:2.r",
-            "uno:GND.2",
-            "green",
-            [
-                "h0"
-            ]
-        ],
-        [
-            "uno:2",
-            "r1:2",
-            "green",
-            [
-                "v0"
-            ]
-        ],
-        [
-            "r1:1",
-            "led1:A",
-            "green",
-            [
-                "v0"
-            ]
-        ],
-        [
-            "led1:C",
-            "uno:GND.1",
-            "green",
-            [
-                "v0"
-            ]
-        ],
-        [
-            "btn1:1.l",
-            "uno:5",
-            "green",
-            [
-                "h0"
-            ]
-        ]
+      [ "esp:TX", "$serialMonitor:RX", "", [] ],
+      [ "esp:RX", "$serialMonitor:TX", "", [] ],
+      [ "esp:3V3", "bb1:bp.1", "green", [ "h0.15", "v-123.9" ] ],
+      [ "esp:GND.1", "bb1:bn.1", "black", [ "h-38.25", "v-238.7" ] ],
+      [ "oled1:GND", "bb1:bn.29", "black", [ "v0" ] ],
+      [ "oled1:VCC", "bb1:bp.30", "red", [ "v0" ] ],
+      [ "oled1:SCL", "bb1:38b.j", "green", [ "v0" ] ],
+      [ "oled1:SDA", "bb1:39b.j", "green", [ "v0" ] ],
+      [ "bb1:38b.i", "esp:22", "yellow", [ "h-76.8", "v182.4" ] ],
+      [ "bb1:39b.i", "esp:21", "yellow", [ "h-76.8", "v211.2" ] ],
+      [ "bb1:17t.e", "bb1:bn.13", "green", [ "v0" ] ],
+      [ "esp:2", "bb1:18b.j", "green", [ "h0" ] ],
+      [ "led1:A", "bb1:18t.b", "", [ "$bb" ] ],
+      [ "led1:C", "bb1:17t.b", "", [ "$bb" ] ],
+      [ "r1:1", "bb1:18t.d", "", [ "$bb" ] ],
+      [ "r1:2", "bb1:18b.h", "", [ "$bb" ] ]
     ],
     "dependencies": {}
-}
+  }

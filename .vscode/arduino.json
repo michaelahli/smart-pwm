@@ -1,5 +1,0 @@
-{
-    "sketch": "smart-pwm.ino",
-    "output": "build",
-    "board": "arduino:avr:uno"
-}

@@ -1,77 +1,78 @@
-#define POTENTIOMETER_INPUT A0
-#define LED_OUTPUT 2
-#define PUSH_INPUT 5
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
-#define BASE_PERIOD 25.0
-#define DEVIATION_COMPARATOR 10.0
+#define SCREEN_WIDTH 128 // OLED width,  in pixels
+#define SCREEN_HEIGHT 64 // OLED height, in pixels
+#define I2C_ADDRESS 0x3C
+#define OUTPUT_PIN 2
+#define VCC 3.3
+#define EXPECTED_VOUT 2.0
+#define INPUT_RANGE 255.0
+#define EXPECTED_IOUT 0.008
 
-#define POTENSIOMETER_MIN_SCALE 1
-#define POTENSIOMETER_MAX_SCALE 1023
-#define POTENSIOMETER_MIN_RESCALE -255.75
-#define POTENSIOMETER_MAX_RESCALE 767.25
-
-int counter = 0;
+// create an OLED display object connected to I2C
+Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
 
-    pinMode(LED_OUTPUT, OUTPUT);
-    pinMode(PUSH_INPUT, INPUT_PULLUP);
-    pinMode(POTENTIOMETER_INPUT, INPUT);
+    pinMode(OUTPUT_PIN, OUTPUT);
+    // initialize OLED display with I2C address 0x3C
+    if (!oled.begin(SSD1306_SWITCHCAPVCC, I2C_ADDRESS))
+    {
+        Serial.println(F("failed to start SSD1306 OLED"));
+        while (1)
+            ;
+    }
+
+    delay(2000); // wait two seconds for initializing
 }
 
 void loop()
 {
-    float deviation = variableDeviation();
-    float period = BASE_PERIOD;
-    if (isDeviceOn())
-    {
-        pulseWidthModulation(period, deviation);
-        return;
-    };
-    delay(100);
+    dim();
 }
 
-bool isDeviceOn()
+void dim()
 {
-    return digitalRead(PUSH_INPUT) == LOW;
+    analogWrite(OUTPUT_PIN, measure(12.0));  // Dim the LED to half brightness
+    delay(1000);                             // Wait for 1 second
+    analogWrite(OUTPUT_PIN, measure(255.0)); // Turn the LED on full brightness
+    delay(1000);                             // Wait for 1 second
 }
 
-float variableDeviation()
+float measure(float input)
 {
-    int input = analogRead(POTENTIOMETER_INPUT);
-    input = map(input, POTENSIOMETER_MIN_SCALE, POTENSIOMETER_MAX_SCALE, POTENSIOMETER_MIN_RESCALE, POTENSIOMETER_MAX_RESCALE);
-    return input / DEVIATION_COMPARATOR;
+    // Measure the voltage across the LED
+    float voltage = input / INPUT_RANGE * VCC;
+
+    float resistance = (VCC - EXPECTED_VOUT) / EXPECTED_IOUT;
+    // Measure the current flowing through the LED
+    float current = voltage / resistance;
+
+    // Calculate the power output of the LED
+    float power = voltage * current;
+
+    displayoled(power, current, resistance, voltage);
+    return input;
 }
 
-void pulseWidthModulation(float period, float deviation)
+void displayoled(float power, float current, float resistance, float voltage)
 {
-    float highDuration = constrain(period + deviation, 0, 1000);
-    digitalWrite(LED_OUTPUT, HIGH);
-    delay(highDuration);
+    oled.clearDisplay(); // clear display
 
-    float lowDuration = constrain(period - deviation, 0, 1000);
-    digitalWrite(LED_OUTPUT, LOW);
-    delay(lowDuration);
-
-    traceMetrics(highDuration, lowDuration);
-}
-
-void traceMetrics(float highDuration, float lowDuration)
-{
-    Serial.print(" duty cycle: ");
-    Serial.print(100 * highDuration / (lowDuration + highDuration));
-    Serial.print("%");
-    Serial.print(" high: ");
-    Serial.print(highDuration);
-    Serial.print("ms ");
-    Serial.print(1000.0 / highDuration);
-    Serial.print("hz");
-    Serial.print(" low: ");
-    Serial.print(lowDuration);
-    Serial.print("ms ");
-    Serial.print(1000.0 / lowDuration);
-    Serial.print("hz");
-    Serial.println("");
+    oled.setTextSize(0.5);    // set text size
+    oled.setTextColor(WHITE); // set text color
+    oled.setCursor(0, 2);     // set position to display (x,y)
+    oled.print("Power (W): ");
+    oled.println(power);
+    oled.print("Current (mA): ");
+    oled.println(current * 1000);
+    oled.print("Resistance (Ohm): ");
+    oled.println(resistance);
+    oled.print("Voltage (V): ");
+    oled.println(voltage);
+    oled.display(); // display on OLED
 }
