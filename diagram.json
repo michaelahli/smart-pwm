@@ -15,10 +15,10 @@
       {
         "type": "wokwi-resistor",
         "id": "r1",
-        "top": 72,
+        "top": 62.4,
         "left": 124.25,
         "rotate": 90,
-        "attrs": { "value": "130" }
+        "attrs": { "value": "162" }
       },
       {
         "type": "wokwi-led",
@@ -26,7 +26,9 @@
         "top": -13.2,
         "left": 128.6,
         "attrs": { "color": "red" }
-      }
+      },
+      { "type": "wokwi-slide-switch", "id": "sw1", "top": 52.4, "left": 166.3, "attrs": {} },
+      { "type": "wokwi-potentiometer", "id": "pot1", "top": 267.5, "left": 460.6, "attrs": {} }
     ],
     "connections": [
       [ "esp:TX", "$serialMonitor:RX", "", [] ],
@@ -40,11 +42,19 @@
       [ "bb1:38b.i", "esp:22", "yellow", [ "h-76.8", "v182.4" ] ],
       [ "bb1:39b.i", "esp:21", "yellow", [ "h-76.8", "v211.2" ] ],
       [ "bb1:17t.e", "bb1:bn.13", "green", [ "v0" ] ],
-      [ "esp:2", "bb1:18b.j", "green", [ "h0" ] ],
       [ "led1:A", "bb1:18t.b", "", [ "$bb" ] ],
       [ "led1:C", "bb1:17t.b", "", [ "$bb" ] ],
-      [ "r1:1", "bb1:18t.d", "", [ "$bb" ] ],
-      [ "r1:2", "bb1:18b.h", "", [ "$bb" ] ]
+      [ "sw1:1", "bb1:20b.f", "", [ "$bb" ] ],
+      [ "sw1:2", "bb1:21b.f", "", [ "$bb" ] ],
+      [ "sw1:3", "bb1:22b.f", "", [ "$bb" ] ],
+      [ "bb1:18b.h", "bb1:20b.g", "green", [ "h19.2", "v-9.6" ] ],
+      [ "esp:2", "bb1:21b.h", "green", [ "h0" ] ],
+      [ "pot1:GND", "bb1:bn.43", "black", [ "v0" ] ],
+      [ "pot1:VCC", "bb1:bp.45", "red", [ "v0" ] ],
+      [ "pot1:SIG", "bb1:54b.j", "green", [ "v0" ] ],
+      [ "bb1:54b.i", "esp:4", "green", [ "h-76.8", "v278.4" ] ],
+      [ "r1:1", "bb1:18t.c", "", [ "$bb" ] ],
+      [ "r1:2", "bb1:18b.g", "", [ "$bb" ] ]
     ],
     "dependencies": {}
-  }
+}

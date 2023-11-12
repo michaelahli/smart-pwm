@@ -2,10 +2,13 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+#define OUTPUT_PIN 2
+#define POTENTIO_PIN 4
+
 #define SCREEN_WIDTH 128 // OLED width,  in pixels
 #define SCREEN_HEIGHT 64 // OLED height, in pixels
 #define I2C_ADDRESS 0x3C
-#define OUTPUT_PIN 2
+
 #define VCC 3.3
 #define EXPECTED_VOUT 2.0
 #define INPUT_RANGE 255.0
@@ -19,6 +22,7 @@ void setup()
     Serial.begin(115200);
 
     pinMode(OUTPUT_PIN, OUTPUT);
+    pinMode(POTENTIO_PIN, INPUT);
     // initialize OLED display with I2C address 0x3C
     if (!oled.begin(SSD1306_SWITCHCAPVCC, I2C_ADDRESS))
     {
@@ -32,15 +36,14 @@ void setup()
 
 void loop()
 {
-    dim();
+  dim(100);
 }
 
-void dim()
+void dim(int duration)
 {
-    analogWrite(OUTPUT_PIN, measure(12.0));  // Dim the LED to half brightness
-    delay(1000);                             // Wait for 1 second
-    analogWrite(OUTPUT_PIN, measure(255.0)); // Turn the LED on full brightness
-    delay(1000);                             // Wait for 1 second
+    float potentiometer = map(analogRead(POTENTIO_PIN), 0, 4095, 0, 255);
+    analogWrite(OUTPUT_PIN, measure(potentiometer));  
+    delay(duration);                            
 }
 
 float measure(float input)
