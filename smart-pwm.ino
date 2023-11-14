@@ -642,6 +642,32 @@ const char OLEDModule::batteryIconFullBitmap[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe0, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xe0};
 
+void dim()
+{
+    float potentiometerValue = map(analogRead(POTENTIO_PIN), 0, 4095, 0, 255);
+    usage.store(potentiometerValue);
+    oledmod.setUsage(usage);
+    analogWrite(OUTPUT_PIN, potentiometerValue);
+}
+
+void monitor(int interval)
+{
+    static long next_time = 0;
+    if (millis() < next_time)
+        return;
+    next_time += interval;
+    oledmod.commonDisplay();
+}
+
+void output(int interval)
+{
+    static long next_time = 0;
+    if (millis() < next_time)
+        return;
+    next_time += interval;
+    dim();
+}
+
 void setup()
 {
     Serial.begin(115200);
@@ -659,21 +685,6 @@ void setup()
 
 void loop()
 {
-    unsigned long currentMillis = millis();
-
-    if (currentMillis - previousDimMillis >= dimInterval)
-    {
-        dim();
-        previousDimMillis = currentMillis;
-    }
-
-    oledmod.commonDisplay();
-}
-
-void dim()
-{
-    float potentiometerValue = map(analogRead(POTENTIO_PIN), 0, 4095, 0, 255);
-    usage.store(potentiometerValue);
-    oledmod.setUsage(usage);
-    analogWrite(OUTPUT_PIN, potentiometerValue);
+    monitor(1); // schedule the two protothreads
+    output(1);  // by calling them infinitely
 }
