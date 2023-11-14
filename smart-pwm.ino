@@ -4,6 +4,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #define OUTPUT_PIN 2
 #define POTENTIO_PIN 4
 #define BUTTON_BACK_PIN 16
@@ -166,7 +169,7 @@ public:
                 ;
         }
         displayLogo();
-        delay(2000);
+        vTaskDelay(2000);
         displayMenu();
     }
 
@@ -650,41 +653,43 @@ void dim()
     analogWrite(OUTPUT_PIN, potentiometerValue);
 }
 
-void monitor(int interval)
+void monitor(void *pvParameters)
 {
-    static long next_time = 0;
-    if (millis() < next_time)
-        return;
-    next_time += interval;
-    oledmod.commonDisplay();
+    pinMode(BUZZER_PIN, OUTPUT);
+    digitalWrite(BUZZER_PIN, LOW);
+
+    buttonOK.begin();
+    buttonNext.begin();
+    buttonBack.begin();
+
+    oledmod.begin();
+
+    for (;;)
+    {
+        oledmod.commonDisplay();
+    }
 }
 
-void output(int interval)
+void output(void *pvParameters)
 {
-    static long next_time = 0;
-    if (millis() < next_time)
-        return;
-    next_time += interval;
-    dim();
+    pinMode(OUTPUT_PIN, OUTPUT);
+    pinMode(POTENTIO_PIN, INPUT);
+
+    for (;;)
+    {
+        dim();
+        vTaskDelay(100);
+    }
 }
 
 void setup()
 {
     Serial.begin(115200);
 
-    pinMode(OUTPUT_PIN, OUTPUT);
-    pinMode(POTENTIO_PIN, INPUT);
-
-    pinMode(BUZZER_PIN, OUTPUT);
-    digitalWrite(BUZZER_PIN, LOW);
-
-    buttonBack.begin();
-
-    oledmod.begin();
+    xTaskCreate(&output, "Output Thread", 4096, NULL, 1, NULL);
+    xTaskCreate(&monitor, "Monitor Thread", 4096, NULL, 2, NULL);
 }
 
 void loop()
 {
-    monitor(1); // schedule the two protothreads
-    output(1);  // by calling them infinitely
 }
