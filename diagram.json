@@ -8,7 +8,7 @@
     {
       "type": "board-ssd1306",
       "id": "oled1",
-      "top": 262.34,
+      "top": 214.34,
       "left": 288.23,
       "attrs": { "i2cAddress": "0x3c" }
     },
@@ -75,8 +75,8 @@
     [ "oled1:VCC", "bb1:bp.30", "red", [ "v0" ] ],
     [ "oled1:SCL", "bb1:38b.j", "green", [ "v0" ] ],
     [ "oled1:SDA", "bb1:39b.j", "green", [ "v0" ] ],
-    [ "bb1:38b.i", "esp:22", "yellow", [ "h-76.8", "v182.4" ] ],
-    [ "bb1:39b.i", "esp:21", "yellow", [ "h-76.8", "v211.2" ] ],
+    [ "bb1:38b.i", "esp:22", "cyan", [ "h-76.8", "v182.4" ] ],
+    [ "bb1:39b.i", "esp:21", "blue", [ "h28.8", "v211.2" ] ],
     [ "bb1:17t.e", "bb1:bn.13", "green", [ "v0" ] ],
     [ "pot1:GND", "bb1:bn.43", "black", [ "v0" ] ],
     [ "pot1:VCC", "bb1:bp.45", "red", [ "v0" ] ],
@@ -121,7 +121,7 @@
     [ "led2:C", "bb1:10t.b", "", [ "$bb" ] ],
     [ "r2:1", "bb1:11t.c", "", [ "$bb" ] ],
     [ "r2:2", "bb1:11b.g", "", [ "$bb" ] ],
-    [ "relay1:NO", "bb1:18b.i", "green", [ "h327.6", "v199.8" ] ]
+    [ "relay1:NO", "bb1:18b.h", "green", [ "h327.6", "v7.8" ] ]
   ],
   "dependencies": {}
 }

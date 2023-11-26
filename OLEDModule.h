@@ -7,14 +7,18 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+
 #include "ResourceUsage.h"
 #include "Button.h"
+#include "Output.h"
 
 class OLEDModule
 {
 public:
-    OLEDModule(Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext);
+    OLEDModule(Output &output, Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext);
     void begin();
+    void shutDown();
+    void reboot();
     void displayLogo();
     void error(String message);
     void commonDisplay();
@@ -23,6 +27,7 @@ public:
     void handleLogo();
     void handleResource();
     void handleBattery();
+    void handleReboot();
     void displayBattery(int battery);
     void displayResources();
     void setUsage(ResourceUsage usage);
@@ -40,6 +45,7 @@ private:
     Button &buttonBack;
     Button &buttonOK;
     Button &buttonNext;
+    Output &output;
 };
 
 #endif // OLED_MODULE_H

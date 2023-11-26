@@ -102,10 +102,10 @@ const char OLEDModule::batteryIconFullBitmap[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe0, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xe0};
 
-OLEDModule::OLEDModule(Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext)
-    : oled(oled), buttonBack(btnBack), buttonOK(btnOK), buttonNext(btnNext)
+OLEDModule::OLEDModule(Output &output, Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext)
+    : output(output), oled(oled), buttonBack(btnBack), buttonOK(btnOK), buttonNext(btnNext)
 {
-    menuOptions = {"Resource Usages", "Check Battery", "Back"};
+    menuOptions = {"Resource Usages", "Check Battery", "Shut Down"};
 }
 
 void OLEDModule::begin()
@@ -116,9 +116,7 @@ void OLEDModule::begin()
         while (1)
             ;
     }
-    displayLogo();
-    vTaskDelay(2000);
-    displayMenu();
+    reboot();
 }
 
 void OLEDModule::displayLogo()
@@ -283,6 +281,26 @@ void OLEDModule::displayLogo()
     oled.display();
 }
 
+void OLEDModule::shutDown()
+{
+    displayLogo();
+    vTaskDelay(2000);
+
+    selectedPage = "None";
+
+    oled.clearDisplay();
+    oled.display();
+    output.disconnect();
+}
+
+void OLEDModule::reboot()
+{
+    output.connect();
+    displayLogo();
+    vTaskDelay(2000);
+    displayMenu();
+}
+
 void OLEDModule::error(String message)
 {
     oled.clearDisplay();
@@ -306,6 +324,10 @@ void OLEDModule::commonDisplay()
     if (selectedPage == "Battery")
     {
         handleBattery();
+    };
+    if (selectedPage == "None")
+    {
+        handleReboot();
     };
 }
 
@@ -334,6 +356,19 @@ void OLEDModule::displayMenu()
     oled.display();
 }
 
+void OLEDModule::handleReboot()
+{
+    if (!buttonOK.wasPressed())
+    {
+        return;
+    }
+    if (output.state())
+    {
+        return;
+    }
+    reboot();
+}
+
 void OLEDModule::handleMenu()
 {
     if (buttonBack.wasPressed())
@@ -350,10 +385,10 @@ void OLEDModule::handleMenu()
             break;
         case 1:
             // TODO: display real battery capacity
-            displayBattery(100);
+            displayBattery(40);
             break;
         case 2:
-            displayLogo();
+            shutDown();
             break;
         default:
             error("unknown selected menu: " + String(selectedOption));
