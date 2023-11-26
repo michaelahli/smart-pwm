@@ -55,14 +55,21 @@
     { "type": "wokwi-vcc", "id": "vcc1", "top": -85.64, "left": 0, "attrs": {} },
     { "type": "wokwi-gnd", "id": "gnd1", "top": -76.8, "left": 28.2, "attrs": {} },
     { "type": "wokwi-relay-module", "id": "relay1", "top": -143.8, "left": 201.6, "attrs": {} },
-    { "type": "wokwi-led", "id": "led2", "top": -13.2, "left": 61.4, "attrs": { "color": "red" } },
+    { "type": "wokwi-led", "id": "led2", "top": -22.8, "left": 23, "attrs": { "color": "red" } },
     {
       "type": "wokwi-resistor",
       "id": "r2",
-      "top": 62.4,
-      "left": 57.05,
-      "rotate": 90,
+      "top": 99.95,
+      "left": 28.8,
       "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn4",
+      "top": 37.8,
+      "left": 3,
+      "rotate": 90,
+      "attrs": { "color": "green" }
     }
   ],
   "connections": [
@@ -92,8 +99,7 @@
     [ "relay1:VCC", "bb1:tp.15", "red", [ "h-38.4" ] ],
     [ "relay1:GND", "bb1:tn.16", "black", [ "h0" ] ],
     [ "esp:2", "bb1:11b.i", "green", [ "h0" ] ],
-    [ "relay1:IN", "bb1:11b.h", "green", [ "h-96", "v211" ] ],
-    [ "bb1:10t.c", "bb1:bn.7", "green", [ "v0" ] ],
+    [ "relay1:NO", "bb1:18b.h", "green", [ "h327.6", "v7.8" ] ],
     [ "led1:A", "bb1:18t.b", "", [ "$bb" ] ],
     [ "led1:C", "bb1:17t.b", "", [ "$bb" ] ],
     [ "bz1:1", "bb1:27b.g", "", [ "$bb" ] ],
@@ -110,13 +116,18 @@
     [ "btn3:2.l", "bb1:49t.b", "", [ "$bb" ] ],
     [ "btn3:1.r", "bb1:51b.g", "", [ "$bb" ] ],
     [ "btn3:2.r", "bb1:49b.g", "", [ "$bb" ] ],
-    [ "led2:A", "bb1:11t.b", "", [ "$bb" ] ],
-    [ "led2:C", "bb1:10t.b", "", [ "$bb" ] ],
-    [ "r2:1", "bb1:11t.c", "", [ "$bb" ] ],
-    [ "r2:2", "bb1:11b.g", "", [ "$bb" ] ],
-    [ "relay1:NO", "bb1:18b.h", "green", [ "h327.6", "v7.8" ] ],
     [ "r1:1", "bb1:18t.c", "", [ "$bb" ] ],
-    [ "r1:2", "bb1:18b.g", "", [ "$bb" ] ]
+    [ "r1:2", "bb1:18b.g", "", [ "$bb" ] ],
+    [ "r2:1", "bb1:5b.h", "", [ "$bb" ] ],
+    [ "r2:2", "bb1:11b.h", "", [ "$bb" ] ],
+    [ "led2:A", "bb1:7t.a", "", [ "$bb" ] ],
+    [ "led2:C", "bb1:6t.a", "", [ "$bb" ] ],
+    [ "btn4:1.l", "bb1:7t.b", "", [ "$bb" ] ],
+    [ "btn4:2.l", "bb1:5t.b", "", [ "$bb" ] ],
+    [ "btn4:1.r", "bb1:7b.g", "", [ "$bb" ] ],
+    [ "btn4:2.r", "bb1:5b.g", "", [ "$bb" ] ],
+    [ "bb1:6t.b", "bb1:bn.2", "green", [ "h-86.4", "v153.6", "h68" ] ],
+    [ "relay1:IN", "bb1:11b.g", "green", [ "h-86.4", "v201.4" ] ]
   ],
   "dependencies": {}
 }
