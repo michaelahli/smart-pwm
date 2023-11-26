@@ -20,7 +20,7 @@ private:
     static constexpr byte debounceDelay = 30;
     const bool active;
     const int freq;
-    bool lastButtonState;
+    bool lastButtonState = HIGH;
     byte lastDebounceTime;
 };
 
