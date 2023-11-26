@@ -27,7 +27,6 @@
       "left": 128.6,
       "attrs": { "color": "red" }
     },
-    { "type": "wokwi-potentiometer", "id": "pot1", "top": 267.5, "left": 460.6, "attrs": {} },
     { "type": "wokwi-buzzer", "id": "bz1", "top": 12, "left": 213, "attrs": { "volume": "0.1" } },
     {
       "type": "wokwi-pushbutton",
@@ -78,10 +77,6 @@
     [ "bb1:38b.i", "esp:22", "cyan", [ "h-76.8", "v182.4" ] ],
     [ "bb1:39b.i", "esp:21", "blue", [ "h28.8", "v211.2" ] ],
     [ "bb1:17t.e", "bb1:bn.13", "green", [ "v0" ] ],
-    [ "pot1:GND", "bb1:bn.43", "black", [ "v0" ] ],
-    [ "pot1:VCC", "bb1:bp.45", "red", [ "v0" ] ],
-    [ "pot1:SIG", "bb1:54b.j", "green", [ "v0" ] ],
-    [ "bb1:54b.i", "esp:4", "green", [ "h-76.8", "v278.4" ] ],
     [ "bz1:1", "bb1:bn.21", "green", [ "v0" ] ],
     [ "btn1:2.l", "bb1:43t.c", "green", [ "v0" ] ],
     [ "bb1:43b.h", "bb1:bp.35", "red", [ "v0" ] ],
@@ -99,8 +94,6 @@
     [ "esp:2", "bb1:11b.i", "green", [ "h0" ] ],
     [ "relay1:IN", "bb1:11b.h", "green", [ "h-96", "v211" ] ],
     [ "bb1:10t.c", "bb1:bn.7", "green", [ "v0" ] ],
-    [ "r1:1", "bb1:18t.c", "", [ "$bb" ] ],
-    [ "r1:2", "bb1:18b.g", "", [ "$bb" ] ],
     [ "led1:A", "bb1:18t.b", "", [ "$bb" ] ],
     [ "led1:C", "bb1:17t.b", "", [ "$bb" ] ],
     [ "bz1:1", "bb1:27b.g", "", [ "$bb" ] ],
@@ -121,7 +114,9 @@
     [ "led2:C", "bb1:10t.b", "", [ "$bb" ] ],
     [ "r2:1", "bb1:11t.c", "", [ "$bb" ] ],
     [ "r2:2", "bb1:11b.g", "", [ "$bb" ] ],
-    [ "relay1:NO", "bb1:18b.h", "green", [ "h327.6", "v7.8" ] ]
+    [ "relay1:NO", "bb1:18b.h", "green", [ "h327.6", "v7.8" ] ],
+    [ "r1:1", "bb1:18t.c", "", [ "$bb" ] ],
+    [ "r1:2", "bb1:18b.g", "", [ "$bb" ] ]
   ],
   "dependencies": {}
 }

@@ -15,7 +15,8 @@
 class OLEDModule
 {
 public:
-    OLEDModule(Output &output, Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext);
+    OLEDModule(Output &output, Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext, ResourceUsage usage);
+
     void begin();
     void shutDown();
     void reboot();
@@ -28,9 +29,12 @@ public:
     void handleResource();
     void handleBattery();
     void handleReboot();
+    void handleSettings();
     void displayBattery(int battery);
     void displayResources();
+    void displaySettings(int power);
     void setUsage(ResourceUsage usage);
+
     static const char batteryIconLowBitmap[];
     static const char batteryIconMediumBitmap[];
     static const char batteryIconHighBitmap[];
@@ -40,12 +44,13 @@ private:
     int selectedOption;
     String selectedPage;
     ResourceUsage ru;
-    std::vector<String> menuOptions;
     Adafruit_SSD1306 &oled;
+    Output &output;
+    std::vector<String> menuOptions;
     Button &buttonBack;
     Button &buttonOK;
     Button &buttonNext;
-    Output &output;
+    ResourceUsage usage;
 };
 
 #endif // OLED_MODULE_H

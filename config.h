@@ -11,7 +11,7 @@
 #define SCREEN_HEIGHT 64 // OLED height, in pixels
 #define I2C_ADDRESS 0x3C // I2C address, depends on specs
 
-#define VCC 3.3
+#define VCC 9
 #define EXPECTED_VOUT 2.0
 #define INPUT_RANGE 255.0
 #define EXPECTED_IOUT 0.008

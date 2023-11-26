@@ -3,7 +3,6 @@
 ResourceUsage::ResourceUsage()
 {
     voltage = 0;
-    resistance = 0;
     current = 0;
     power = 0;
 }
@@ -11,7 +10,6 @@ ResourceUsage::ResourceUsage()
 float ResourceUsage::store(float input)
 {
     voltage = input / INPUT_RANGE * VCC;
-    resistance = (VCC - EXPECTED_VOUT) / EXPECTED_IOUT;
     current = voltage / resistance;
     power = voltage * current;
 
@@ -36,4 +34,14 @@ float ResourceUsage::getCurrent()
 float ResourceUsage::getPower()
 {
     return power;
+}
+
+float ResourceUsage::getMaxPower()
+{
+    return pow(VCC, 2) / resistanceCoil;
+}
+
+int ResourceUsage::powerToAnalog(float power)
+{
+    return power / getMaxPower() * INPUT_RANGE;
 }

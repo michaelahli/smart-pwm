@@ -10,12 +10,12 @@
 
 Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-Output output(OUTPUT_PIN, POTENTIO_PIN);
 ResourceUsage usage;
+Output output(OUTPUT_PIN, usage);
 Button buttonBack(BUTTON_BACK_PIN, 3000);
 Button buttonOK(BUTTON_OK_PIN, 2000);
 Button buttonNext(BUTTON_NEXT_PIN, 3000);
-OLEDModule ui(output, oled, buttonBack, buttonOK, buttonNext);
+OLEDModule ui(output, oled, buttonBack, buttonOK, buttonNext, usage);
 
 unsigned long previousDimMillis = 0;
 unsigned long dimInterval = 100; // Interval for dimming in milliseconds

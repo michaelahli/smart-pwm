@@ -102,10 +102,10 @@ const char OLEDModule::batteryIconFullBitmap[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe0, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xe0};
 
-OLEDModule::OLEDModule(Output &output, Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext)
-    : output(output), oled(oled), buttonBack(btnBack), buttonOK(btnOK), buttonNext(btnNext)
+OLEDModule::OLEDModule(Output &output, Adafruit_SSD1306 &oled, Button &btnBack, Button &btnOK, Button &btnNext, ResourceUsage usage)
+    : output(output), oled(oled), buttonBack(btnBack), buttonOK(btnOK), buttonNext(btnNext), usage(usage)
 {
-    menuOptions = {"Resource Usages", "Check Battery", "Shut Down"};
+    menuOptions = {"Settings", "Shut Down", "Resource Usages", "Check Battery"};
 }
 
 void OLEDModule::begin()
@@ -329,6 +329,10 @@ void OLEDModule::commonDisplay()
     {
         handleReboot();
     };
+    if (selectedPage == "Settings")
+    {
+        handleSettings();
+    };
 }
 
 void OLEDModule::displayMenu()
@@ -344,11 +348,11 @@ void OLEDModule::displayMenu()
     {
         if (i == selectedOption)
         {
-            oled.print("> "); // Display ">" for the selected option
+            oled.print("> ");
         }
         else
         {
-            oled.print("  "); // Display a space for other options
+            oled.print("  ");
         }
         oled.println(menuOptions[i]);
     }
@@ -369,6 +373,61 @@ void OLEDModule::handleReboot()
     reboot();
 }
 
+void OLEDModule::displaySettings(int power)
+{
+    selectedPage = "Settings";
+
+    oled.clearDisplay();
+
+    oled.setTextSize(2);
+    oled.setTextColor(WHITE);
+
+    int screenWidth = oled.width();
+    int screenHeight = oled.height();
+
+    int textSize = 3;
+
+    int textWidth = textSize * 6;
+    int textHeight = textSize * 8;
+    int xPos = (screenWidth - textWidth) / 2;
+    int yPos = (screenHeight - textHeight) / 2;
+
+    oled.setCursor(xPos, yPos);
+
+    oled.println(String(power) + "W");
+
+    oled.display();
+}
+
+void OLEDModule::handleSettings()
+{
+    int power = output.getPower();
+    if (buttonBack.wasPressed())
+    {
+        if (power <= 0)
+        {
+            return;
+        }
+        power = power - 1;
+        output.setPower(power);
+        displaySettings(power);
+    }
+    if (buttonOK.wasPressed())
+    {
+        displayMenu();
+    }
+    if (buttonNext.wasPressed())
+    {
+        if (power >= usage.getMaxPower())
+        {
+            return;
+        }
+        power = power + 1;
+        output.setPower(power);
+        displaySettings(power);
+    }
+}
+
 void OLEDModule::handleMenu()
 {
     if (buttonBack.wasPressed())
@@ -381,14 +440,16 @@ void OLEDModule::handleMenu()
         switch (selectedOption)
         {
         case 0:
-            displayResources();
+            displaySettings(output.getPower());
             break;
         case 1:
-            // TODO: display real battery capacity
-            displayBattery(40);
+            shutDown();
             break;
         case 2:
-            shutDown();
+            displayResources();
+            break;
+        case 3:
+            displayBattery(40);
             break;
         default:
             error("unknown selected menu: " + String(selectedOption));
@@ -451,7 +512,6 @@ void OLEDModule::displayBattery(int battery)
     oled.setTextSize(1);
     oled.setTextColor(WHITE);
 
-    // Determine the battery icon based on the battery percentage
     const uint8_t *batteryIcon;
     if (battery < 25)
     {
@@ -470,16 +530,13 @@ void OLEDModule::displayBattery(int battery)
         batteryIcon = reinterpret_cast<const uint8_t *>(batteryIconFullBitmap);
     }
 
-    int iconWidth = 51;  // Width of the battery icon
-    int iconHeight = 51; // Height of the battery icon
+    int iconWidth = 51;
+    int iconHeight = 51;
 
-    // Calculate X and Y positions to center the icon and text
     int centerX = (SCREEN_WIDTH - iconWidth) / 2;
 
-    // Display the battery icon
     oled.drawBitmap(centerX, 0, batteryIcon, iconWidth, iconHeight, 1);
 
-    // Display battery percentage
     String message = "Battery: " + String(battery) + "%";
     int textCharLength = message.length();
     oled.setCursor(centerX - textCharLength, 1 + iconHeight);

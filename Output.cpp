@@ -1,19 +1,17 @@
 #include "Output.h"
-#include <Arduino.h>
 
-Output::Output(int outputPin, int potentiometerPin)
+Output::Output(int outputPin, ResourceUsage usage)
 {
     this->outputPin = outputPin;
-    this->potentiometerPin = potentiometerPin;
-    this->connected = true;
+    this->usage = usage;
 }
 
 void Output::pwm()
 {
     if (connected)
     {
-        float potentiometerValue = map(analogRead(potentiometerPin), 0, 4095, 0, 255);
-        analogWrite(outputPin, potentiometerValue);
+        usage.store(pwmval);
+        analogWrite(outputPin, pwmval);
     }
 }
 
@@ -31,4 +29,15 @@ void Output::connect()
 bool Output::state()
 {
     return connected;
+}
+
+void Output::setPower(int power)
+{
+    this->power = power;
+    this->pwmval = usage.powerToAnalog(power);
+}
+
+int Output::getPower()
+{
+    return power;
 }

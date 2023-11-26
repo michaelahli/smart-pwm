@@ -3,6 +3,9 @@
 
 #include "config.h"
 
+#include <Arduino.h>
+#include <math.h>
+
 class ResourceUsage
 {
 public:
@@ -12,12 +15,16 @@ public:
     float getResistance();
     float getCurrent();
     float getPower();
+    float getMaxPower();
+    int powerToAnalog(float power);
 
 private:
     float voltage;
-    float resistance;
     float current;
     float power;
+    // TODO: measure resistance using analog input
+    float resistance = (VCC - EXPECTED_VOUT) / EXPECTED_IOUT;
+    float resistanceCoil = 1;
 };
 
 #endif // RESOURCE_USAGE_H
